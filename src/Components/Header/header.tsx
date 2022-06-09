@@ -1,45 +1,22 @@
 import { Container, Flex, Heading } from "@chakra-ui/react";
 import { useEffect, useState } from "react";
 
+import { useSocket } from "../../socket";
+
 import { NotificationBell } from "../bell";
-
-export interface NotificationEventType {
-  notificationCount: number;
-}
-
-declare global {
-  interface WindowEventMap {
-    notification: CustomEvent<NotificationEventType>;
-  }
-}
-
-export const dispatchNotificationEvent = (notificationCount: number) => {
-  const notificationEvent = new CustomEvent("notification", {
-    detail: { notificationCount },
-  });
-  window.dispatchEvent(notificationEvent);
-};
 
 export const Header = () => {
   const [notificationCount, setNotificationCount] = useState(0);
 
-  useEffect(() => {
-    const notificationListener = (
-      event: CustomEvent<NotificationEventType>
-    ) => {
-      if (event.detail.notificationCount) {
-        setNotificationCount(
-          (prevAmout) => prevAmout + event.detail.notificationCount
-        );
-      }
-    };
+  const addNotification = (data: unknown) => {
+    setNotificationCount((prevCount) => prevCount + (data as number));
+  };
 
-    window.addEventListener("notification", notificationListener);
-  }, []);
+  useEffect(useSocket("notification", addNotification), []);
 
   return (
     <Container>
-      <Flex>
+      <Flex justifyContent="space-between">
         <Heading>WebSoc POC</Heading>
         <NotificationBell count={notificationCount} />
       </Flex>

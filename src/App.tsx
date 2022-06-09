@@ -5,12 +5,19 @@ import {
   Button,
   Container,
 } from "@chakra-ui/react";
+import { useState } from "react";
 
-import { Header, dispatchNotificationEvent } from "./Components/Header/header";
+import { Header } from "./Components/Header/header";
+import { emitSocketMessage } from "./socket";
 
 export const App = () => {
+  const [message, setMessage] = useState("");
+
   const sendNotification = () => {
-    dispatchNotificationEvent(1);
+    if (message) {
+      emitSocketMessage("comment", message);
+      setMessage("");
+    }
   };
 
   return (
@@ -19,7 +26,12 @@ export const App = () => {
       <Container>
         <FormControl>
           <FormLabel htmlFor="comment">Write your comment</FormLabel>
-          <Textarea id="comment" />
+          <Textarea
+            id="comment"
+            value={message}
+            placeholder="Digite seu comentário"
+            onChange={(e) => setMessage(e.target.value)}
+          />
         </FormControl>
 
         <Button mt={4} float="right" onClick={sendNotification}>
