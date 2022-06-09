@@ -22,7 +22,7 @@ export const App = () => {
 
   return (
     <>
-      <Header />
+      <Header my={4} />
       <Container>
         <FormControl>
           <FormLabel htmlFor="comment">Write your comment</FormLabel>

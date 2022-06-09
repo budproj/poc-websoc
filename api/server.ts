@@ -23,7 +23,13 @@ io.on("connection", (socket) => {
       ${comment}
     `);
 
-    socket.emit("notification", 1);
+    const randomId = Math.floor(Math.random() * 10000);
+    const notification = {
+      id: randomId,
+      message: `${socket.id} has commented on your post`,
+    };
+
+    socket.emit("notification", notification);
   });
 });
 

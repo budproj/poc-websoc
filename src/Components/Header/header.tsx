@@ -1,24 +1,24 @@
-import { Container, Flex, Heading } from "@chakra-ui/react";
+import { Container, Flex, Heading, StyleProps } from "@chakra-ui/react";
 import { useEffect, useState } from "react";
 
 import { useSocket } from "../../socket";
 
-import { NotificationBell } from "../bell";
+import { NotificationBell, Notification as NotificationType } from "../bell";
 
-export const Header = () => {
-  const [notificationCount, setNotificationCount] = useState(0);
+export const Header = (props: StyleProps) => {
+  const [notifications, setNotifications] = useState<NotificationType[]>([]);
 
   const addNotification = (data: unknown) => {
-    setNotificationCount((prevCount) => prevCount + (data as number));
+    setNotifications((prevCount) => [...prevCount, data as NotificationType]);
   };
 
   useEffect(useSocket("notification", addNotification), []);
 
   return (
-    <Container>
+    <Container {...props}>
       <Flex justifyContent="space-between">
         <Heading>WebSoc POC</Heading>
-        <NotificationBell count={notificationCount} />
+        <NotificationBell notifications={notifications} />
       </Flex>
     </Container>
   );
